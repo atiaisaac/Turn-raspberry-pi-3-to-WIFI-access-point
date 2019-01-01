@@ -94,16 +94,12 @@ Now we need to tell hostapd where to find its configuration file.
 
 and look for the line that says
 
-`DAEMON CONF=""`
+`DAEMON_CONF=""`
 
 Change it to
 
-`DAEMON CONF="/etc/hostapd/hostapd.conf"`
+`DAEMON_CONF="/etc/hostapd/hostapd.conf"`
 
-
-The next steps described are intended to allow packet forwarding via the Ethernet port. Since the wifi card will behave as an access point and devices connected will need to have access to the internet as well it means that the raspberry pi must also have access to the internet before it can share that internet access with the connected devices.
-
-If you intend to provide the raspberry pi with internet access using a USB modem then you can ignore this.
 
 ## STEP 7
 
@@ -119,7 +115,11 @@ remove the comment so it becomes
 
 `net.ipv4.ip_forward=1`
 
-then save the file.
+then save the file. At this point if your intention is to provide internet via a usb modem then go ahead and restart your pi.
+
+
+The next step is to do a _Network Address Translation_ (NAT). What this means is we want to separate our internal/private network (devices connected to access point) from the external network(internet) since this is how most home networks are done and its also secure. Hence we use the kernels ability to do this called **IP Masquerading** using the iptables utility that comes with most linux systems.
+
 
 ## STEP 8
 
@@ -137,7 +137,7 @@ Press enter
 
 Press enter
 
-Replace _eth0_ and _wlan0_ with your device names. In most cases it will be the same.
+Replace _eth0_ and _wlan0_ with your device names. If your connectioin happens to be dialup replace all instances of **eth0** with **ppp0**
 
 ## STEP 9
 
