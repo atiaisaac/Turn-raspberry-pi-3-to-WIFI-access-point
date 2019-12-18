@@ -1,0 +1,10 @@
+[Unit]
+Description=My usb modem
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/wvdial
+
+[Install]
+WantedBy=multi-user.target
