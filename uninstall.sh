@@ -50,7 +50,7 @@ sed -i 's/DAEMON_CONF="\/etc\/hostapd\/hostapd.conf"/#DAEMON_CONF=""/' /etc/defa
 
 sed -i "s/net.ipv4.ip_forward=1/#net.ipv4.ip_forward=1/" /etc/sysctl.conf
 
-rm /lib/dhcpcd/dhcdpcd-hooks/70-ipv4.nat
+rm /lib/dhcpcd/dhcpcd-hooks/70-ipv4.nat
 rm /lib/systemd/system/sample.service
 
 read -n 1 -p "Press [Enter] to reboot"
