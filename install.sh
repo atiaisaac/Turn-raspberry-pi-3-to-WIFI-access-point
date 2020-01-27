@@ -93,27 +93,12 @@ sed -i "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/" /etc/sysctl.conf
 systemctl enable dnsmasq
 systemctl start dnsmasq
 
-# settting interfaces
-interfaces() {
-	echo
-	echo "This is to help configure the"
-	echo "source and destination interfaces to"
-	echo "route data packets.eg eth0,wlan0,ppp0"
-	read -p "Enter the interface name for input (source of internet): " source
-	read -p "Enter the interface name for output: " destination
-	if [[ $source == "ppp0" ]];then
-		cp sample.service /lib/systemd/system
-		systemctl daemon-reload
-		systemctl enable sample.service
-}
-
-interfaces
-
 # configuring network address translation 
 # replace ppp0 with eth0 if using ethernet instead of dialup modem
-iptables -t nat -A POSTROUTING -o $source -j MASQUERADE  
-iptables -A FORWARD -i $source -o $destination -m state --state RELATED,ESTABLISHED -j ACCEPT
-iptables -A FORWARD -i $destination -o $source -j ACCEPT
+# also replace wlan0 with the correct interface name
+iptables -t nat -A POSTROUTING -o ppp0 -j MASQUERADE  
+iptables -A FORWARD -i ppp0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i wlan0 -o ppp0 -j ACCEPT
 
 # saving iptabels rules to .nat file
 sh -c "iptables-save > /etc/iptables.ipv4.nat"
