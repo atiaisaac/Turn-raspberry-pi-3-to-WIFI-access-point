@@ -101,8 +101,6 @@ systemctl start sample.service
 
 # configuring network address translation 
 # replace ppp0 with interface of source of internet
-# configuring network address translation 
-# replace ppp0 with eth0 if using ethernet instead of dialup modem
 # also replace wlan0 with the correct interface name
 iptables -t nat -A POSTROUTING -o ppp0 -j MASQUERADE  
 iptables -A FORWARD -i ppp0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
