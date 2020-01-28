@@ -60,7 +60,11 @@ wificonfig() {
 		echo 
 		;;
 	N|n)
-		wificonfig 
+		echo "Sticking with default password of 0123456789"
+		echo "Note this may not be secure"
+		echo "You can change the password later by locating"
+		echo "the hostapd.conf file, changing the value of wpa_supplicant."
+		echo "After which you restart your pi"  
 		;;
 	*)
 		echo "Incorrect option"
