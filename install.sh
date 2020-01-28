@@ -93,6 +93,7 @@ sed -i "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/" /etc/sysctl.conf
 systemctl enable dnsmasq
 systemctl start dnsmasq
 
+<<<<<<< HEAD
 # copy wvdial service to systemd folder
 # this will make wvidal start on boot
 cp sample.service /lib/systemd/system
@@ -101,6 +102,10 @@ systemctl start sample.service
 
 # configuring network address translation 
 # replace ppp0 with interface of source of internet
+=======
+# configuring network address translation 
+# replace ppp0 with eth0 if using ethernet instead of dialup modem
+>>>>>>> 26b96ab4cb255bb2d02f47e9c53fef0f27794a0e
 # also replace wlan0 with the correct interface name
 iptables -t nat -A POSTROUTING -o ppp0 -j MASQUERADE  
 iptables -A FORWARD -i ppp0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
