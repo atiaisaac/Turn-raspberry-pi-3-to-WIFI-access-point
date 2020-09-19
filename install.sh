@@ -32,6 +32,12 @@ if [[ -f /etc/dhcpcd.conf ]];then
 	# echo "	static routers=192.168.4.1" >> /etc/dhcpcd.conf
 	# echo "	static domain_name_servers=192.168.4.1" >> /etc/dhcpcd.conf
 	echo "	nohook wpa_supplicant" >> /etc/dhcpcd.conf
+
+	# ethernet interface configuration
+	echo "interface eth0" >> /etc/dhcpcd.conf
+	echo "	static ip_address=192.168.5.50/24" >> /etc/dhcpcd.conf
+	echo "	static routers=192.168.5.1" >> /etc/dhcpcd.conf
+	echo "	static domain_name_servers=192.168.5.1" >> /etc/dhcpcd.conf
 	
 fi
 
@@ -44,6 +50,13 @@ if [[ -f /etc/dnsmasq.conf ]];then
 	echo "domain-needed" >> /etc/dnsmasq.conf
 	echo "bogus-priv" >> /etc/dnsmasq.conf
 	echo "dhcp-range=192.168.4.100,192.168.4.200,255.255.255.0,24h" >> /etc/dnsmasq.conf
+
+	# ethernet interface configuration
+	echo "interface=eth0" >> /etc/dnsmasq.conf
+	echo "domain-needed" >> /etc/dnsmasq.conf
+	echo "bogus-priv" >> /etc/dnsmasq.conf
+	echo "dhcp-range=192.168.5.100,192.168.5.200,255.255.255.0,24h" >> /etc/dnsmasq.conf
+	
 fi
 
 #set SSID password
@@ -60,7 +73,11 @@ wificonfig() {
 		echo 
 		;;
 	N|n)
-		wificonfig 
+		echo "Sticking with default password of 0123456789"
+		echo "Note this may not be secure"
+		echo "You can change the password later by locating"
+		echo "the hostapd.conf file, changing the value of wpa_supplicant."
+		echo "After which you restart your pi"  
 		;;
 	*)
 		echo "Incorrect option"
@@ -103,8 +120,14 @@ systemctl start sample.service
 # replace ppp0 with interface of source of internet
 # also replace wlan0 with the correct interface name
 iptables -t nat -A POSTROUTING -o ppp0 -j MASQUERADE  
+
+# for WiFi interface
 iptables -A FORWARD -i ppp0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
 iptables -A FORWARD -i wlan0 -o ppp0 -j ACCEPT
+
+# for Ethernet interface
+iptables -A FORWARD -i ppp0 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i eth0 -o ppp0 -j ACCEPT
 
 # saving iptabels rules to .nat file
 sh -c "iptables-save > /etc/iptables.ipv4.nat"
