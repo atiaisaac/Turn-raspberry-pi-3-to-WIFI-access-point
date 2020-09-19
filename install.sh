@@ -27,6 +27,8 @@ systemctl disable dnsmasq
 if [[ -f /etc/dhcpcd.conf ]];then
 	cp /etc/dhcpcd.conf /etc/dhcpcd.conf.bak
 	echo
+
+	# wifi interface configuration
 	echo "interface wlan0" >> /etc/dhcpcd.conf
 	echo "	static ip_address=192.168.4.50/24" >> /etc/dhcpcd.conf
 	# echo "	static routers=192.168.4.1" >> /etc/dhcpcd.conf
@@ -46,6 +48,8 @@ service dhcpcd restart
 # configuring range of ip address for connected devices
 if [[ -f /etc/dnsmasq.conf ]];then
 	cp /etc/dnsmasq.conf /etc/dnsmasq.conf.bak
+
+	# wifi interface configuration
 	echo "interface=wlan0" >> /etc/dnsmasq.conf
 	echo "domain-needed" >> /etc/dnsmasq.conf
 	echo "bogus-priv" >> /etc/dnsmasq.conf
